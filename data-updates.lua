@@ -43,6 +43,8 @@ end
 -- Adjust purple science recipe to require substation instead of electric furnace
 Recipe("production-science-pack"):replace_ingredient("electric-furnace", "substation")
 
+-- TODO The player should not be able to build mining drones or depots
+
 -- Remove tips & tricks that trigger when something related to our removed buildings happens
 data.raw["tips-and-tricks-item"]["fast-replace"] = nil
 data.raw["tips-and-tricks-item"]["fast-replace-belt-splitter"] = nil
