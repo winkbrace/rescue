@@ -1,6 +1,9 @@
 local Log = require("__stdlib__/stdlib/misc/logger").new("rescue", DEBUG)
 
-local patcher = {}
+local patcher = {
+    surface = {},
+    resources_to_disable = {},
+}
 
 function patcher.spawn(position, item, amount)
     print("spawning patch at (" .. position.x .. "," .. position.y .. ")")
@@ -15,7 +18,7 @@ function patcher.spawn(position, item, amount)
     local function grow(grid, t)
         local old = {}
         local new_count = 0
-        for x, _ in pairs(grid) do for y, __ in pairs(_) do
+        for x, _ in pairs(grid) do for y, _ in pairs(_) do
             table.insert(old, { x, y })
         end end
         for _, pos in pairs(old) do
@@ -44,10 +47,9 @@ function patcher.spawn(position, item, amount)
         total_bias = total_bias + bias
     end end
 
-    local surface = game.player.surface
     for x, _ in pairs(biases) do for y, bias in pairs(_) do
-        if surface.get_tile(position.x + x, position.y + y).collides_with("ground-tile") then
-            surface.create_entity {
+        if patcher.surface.get_tile(position.x + x, position.y + y).collides_with("ground-tile") then
+            patcher.surface.create_entity {
                 name = item,
                 amount = amount * (bias / total_bias),
                 force = 'neutral',
@@ -67,38 +69,55 @@ function patcher.spawn_on_radius(radius, item, amount)
     patcher.spawn(position, item, amount)
 end
 
--- clear a chunk of resources if it's outside the starting area
-function patcher.clear(surface)
-    for _, e in pairs(surface.find_entities_filtered{type="resource"}) do
+function patcher.find_resources_to_disable()
+    for r in pairs(patcher.surface.map_gen_settings.autoplace_controls) do
+        if r ~= "crude-oil" and r~= "enemy-base" and r~= "trees" then
+            table.insert(patcher.resources_to_disable, r)
+        end
+    end
+end
+
+-- clear the world of resources
+function patcher.clear()
+    if next(patcher.resources_to_disable) == nil then
+        patcher.find_resources_to_disable()
+    end
+    for _, e in pairs(patcher.surface.find_entities_filtered{type="resource", name=patcher.resources_to_disable}) do
         e.destroy()
     end
 end
 
-function patcher.regenerate_with_default_settings(surface)
-    local resources = {"iron-ore", "copper-ore", "stone", "coal"}
-    local mgs = surface.map_gen_settings
+function patcher.set_map_gen_settings(resources, value)
+    local mgs = patcher.surface.map_gen_settings
     for _, resource in ipairs(resources) do
-        mgs.autoplace_controls[resource].size = "normal"
-        mgs.autoplace_controls[resource].frequency = "normal"
-        mgs.autoplace_controls[resource].richness = "normal"
+        mgs.autoplace_controls[resource].size = value
+        mgs.autoplace_controls[resource].frequency = value
+        mgs.autoplace_controls[resource].richness = value
     end
     game.surfaces.nauvis.map_gen_settings = mgs
-
-    local chunks = {}
-    for x = -3, 3 do for y = -3, 3 do
-        table.insert(chunks, {x, y})
-    end end
-    surface.regenerate_entity(resources, chunks)
 end
 
-function patcher.disable_spawning_new_resources(surface)
-    local mgs = surface.map_gen_settings
-    for _, resource in ipairs({"iron-ore", "copper-ore", "uranium-ore", "stone", "coal"}) do
-        mgs.autoplace_controls[resource].size = "none"
-        mgs.autoplace_controls[resource].frequency = "none"
-        mgs.autoplace_controls[resource].richness = "none"
+function patcher.regenerate_with_default_settings()
+    local resources = {"iron-ore", "copper-ore", "stone", "coal"}
+
+    patcher.set_map_gen_settings(resources, 1)
+
+    local chunks = {}
+    for x = -4, 4 do for y = -4, 4 do
+        table.insert(chunks, {x, y})
+    end end
+    patcher.surface.regenerate_entity(resources, chunks)
+end
+
+function patcher.disable_spawning_new_resources()
+    if next(patcher.resources_to_disable) == nil then
+        patcher.find_resources_to_disable()
     end
-    game.surfaces.nauvis.map_gen_settings = mgs
+    patcher.set_map_gen_settings(patcher.resources_to_disable, 0)
+    patcher.set_map_gen_settings({"crude-oil"}, 1)
+
+    Log.log("resource generation (autoplace) has been disabled for these resources:")
+    Log.log(serpent.line(patcher.resources_to_disable))
 end
 
 return patcher

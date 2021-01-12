@@ -11,15 +11,15 @@ end)
 
 Event.register(defines.events.on_player_created, function()
     local surface = game.surfaces.nauvis
+    patcher.surface = surface
 
     if not global.resources_initialized then
-        -- Remove all spawned resources
-        patcher.clear(surface)
-        patcher.regenerate_with_default_settings(surface)
-        patcher.disable_spawning_new_resources(surface)
+        patcher.clear()
+        patcher.regenerate_with_default_settings()
+        patcher.disable_spawning_new_resources()
 
         game.print("Starting resources have been regenerated with default settings. This is all you can mine.")
-        game.print("Rescue colonist outposts to gain more resources. And save their souls of course!")
+        game.print("Rescue colonist outposts to gain more resources. Oh, and rescue their butts of course!")
 
         global.resources_initialized = true
     end
