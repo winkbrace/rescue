@@ -4,7 +4,7 @@ local Event = require('__stdlib__/stdlib/event/event').set_protected_mode(true)
 local Log = require("__stdlib__/stdlib/misc/logger").new("rescue", DEBUG)
 
 local patcher = require 'prototypes/patcher'
-local builder = require 'prototypes/depot_builder'
+local builder = require 'prototypes/entity_builder'
 local tiers = require 'prototypes/tiers'
 local player
 
@@ -13,6 +13,7 @@ Event.register(Event.core_events.init, function()
     global.outpost_initialized = false
     global.outpost_distance = 6 -- in chunks
     global.enemy_base_size = 4
+    global.depots = {}
 end)
 
 Event.register(defines.events.on_player_created, function(e)
@@ -32,7 +33,7 @@ Event.register(defines.events.on_player_created, function(e)
 
     if not global.outpost_initialized then
         local radius = global.outpost_distance * 32
-        builder.spawn_on_radius(radius)
+        builder.spawn_depot_on_radius(radius)
 
         global.outpost_initialized = true
     end
@@ -42,19 +43,33 @@ Event.register(defines.events.script_raised_built, function(e)
     if e.entity.name ~= "mining-depot" then
         return
     end
+
     local depot = e.entity
+    table.insert(global.depots, depot)
 
     -- message player
-    local msg = "New outpost discovered at " .. serpent.line(depot.position)
-    game.print(msg)
-    player.add_custom_alert(depot, {type="item", name="mining-depot"}, msg, true)
-    Log.log(msg)
+    game.print("New outpost discovered! Check the alert message.")
+    player.add_custom_alert(depot, {type="item", name="mining-depot"}, "New outpost discovered!", true)
+    Log.log("New outpost spawned at " .. serpent.line(depot.position))
 
     -- spawn patch
     patcher.spawn_near_depot(depot.position, "iron-ore")  -- TODO tiers.next_item()
     Log.log("New patch spawned at " .. serpent.line(depot.position))
 
-    -- TODO spawn enemy bases
+    -- spawn enemy base
+    builder.spawn_enemy_base_at_depot(depot, global.enemy_base_size)
+    Log.log("New enemy base of size " .. global.enemy_base_size .. " spawned at " .. serpent.line(depot.position))
 
     global.outpost_distance = global.outpost_distance + 1
+    global.enemy_base_size = global.enemy_base_size + 1
+end)
+
+-- keep depots revealed on map
+Event.register(defines.events.on_tick, function(event)
+    if event.tick % 60*5 == 0 then --every 5 seconds
+        for _, depot in ipairs(global.depots) do
+            local pos = depot.position
+            game.forces.player.chart(game.surfaces[1], {{pos.x - 16, pos.y - 16}, {pos.x + 16, pos.y + 16}})
+        end
+    end
 end)

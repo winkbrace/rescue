@@ -49,7 +49,8 @@ data.raw.recipe["mining-drone"] = nil
 
 -- Depots should not be minable by the player. Also give them lots of life.
 data.raw["assembling-machine"]["mining-depot"].minable = nil
-data.raw["assembling-machine"]["mining-depot"].max_health = 1e5 -- default was 400
+data.raw["assembling-machine"]["mining-depot"].max_health = 1e5 -- originally was 400
+data.raw["assembling-machine"]["mining-depot"].alert_when_damaged = false
 
 -- Remove tips & tricks that trigger when something related to our removed buildings happens
 data.raw["tips-and-tricks-item"]["fast-replace"] = nil

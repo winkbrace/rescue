@@ -5,7 +5,7 @@ local patcher = {
     resources_to_disable = {},
 }
 
-function patcher.spawn(position, item)
+function patcher.spawn(pos, item)
     local tiles = 512
     local w_max = 16
     local h_max = 16
@@ -47,12 +47,12 @@ function patcher.spawn(position, item)
     end end
 
     for x, _ in pairs(biases) do for y, bias in pairs(_) do
-        if patcher.surface.get_tile(position.x + x, position.y + y).collides_with("ground-tile") then
+        if patcher.surface.get_tile(pos.x + x, pos.y + y).collides_with("ground-tile") then
             patcher.surface.create_entity {
                 name = item,
                 amount = amount * (bias / total_bias),
                 force = 'neutral',
-                position = { position.x + x, position.y + y },
+                position = { pos.x + x, pos.y + y },
             }
         end
     end end
