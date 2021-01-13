@@ -1,4 +1,4 @@
-local Log = require("__stdlib__/stdlib/misc/logger").new("data-updates")
+local Log = require("__stdlib__/stdlib/misc/logger").new("rescue", true)
 local Recipe = require("__stdlib__/stdlib/data/recipe")
 
 -- These are the basic assembling entities that are allowed. Any more advanced will be removed
@@ -43,10 +43,17 @@ end
 -- Adjust purple science recipe to require substation instead of electric furnace
 Recipe("production-science-pack"):replace_ingredient("electric-furnace", "substation")
 
--- TODO The player should not be able to build mining drones or depots
+-- The player should not be able to build mining drones or depots
+data.raw.recipe["mining-depot"] = nil
+data.raw.recipe["mining-drone"] = nil
+
+-- Depots should not be minable by the player. Also give them lots of life.
+data.raw["assembling-machine"]["mining-depot"].minable = nil
+data.raw["assembling-machine"]["mining-depot"].max_health = 1e5 -- default was 400
 
 -- Remove tips & tricks that trigger when something related to our removed buildings happens
 data.raw["tips-and-tricks-item"]["fast-replace"] = nil
 data.raw["tips-and-tricks-item"]["fast-replace-belt-splitter"] = nil
 data.raw["tips-and-tricks-item"]["fast-replace-belt-underground"] = nil
 data.raw["tips-and-tricks-item"]["rotating-assemblers"] = nil
+

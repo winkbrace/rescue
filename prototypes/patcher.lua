@@ -5,12 +5,11 @@ local patcher = {
     resources_to_disable = {},
 }
 
-function patcher.spawn(position, item, amount)
-    print("spawning patch at (" .. position.x .. "," .. position.y .. ")")
-
+function patcher.spawn(position, item)
     local tiles = 512
     local w_max = 16
     local h_max = 16
+    local amount = 5e5
 
     local biases = { [0] = { [0] = 1 } }
     local t = 1
@@ -59,14 +58,15 @@ function patcher.spawn(position, item, amount)
     end end
 end
 
-function patcher.spawn_on_radius(radius, item, amount)
-    local angle = math.random(0, 2 * math.pi)
-    local position = {
-        x = math.ceil(radius * math.cos(angle)),
-        y = math.ceil(radius * math.sin(angle)),
-    }
+function patcher.spawn_near_depot(pos, item)
+    local pos = pos
+    if math.abs(pos.x) > math.abs(pos.y) then
+        pos.x = pos.x > 0 and pos.x + 24 or pos.x - 24
+    else
+        pos.y = pos.y > 0 and pos.y + 24 or pos.y - 24
+    end
 
-    patcher.spawn(position, item, amount)
+    patcher.spawn(pos, item)
 end
 
 function patcher.find_resources_to_disable()
