@@ -5,20 +5,15 @@ local Recipe = require("__stdlib__/stdlib/data/recipe")
 -- These are the basic assembling entities that are allowed. Any more advanced will be removed
 -- We use the trick of using the values as key so we can use entities_to_keep[entity] in an if condition
 local entities_to_keep = {
-    ["assembling-machine-1"] = true,
-    ["oil-refinery"] = true,
-    ["chemical-plant"] = true,
-    ["rocket-silo"] = true,
     ["burner-mining-drill"] = true,
     ["pumpjack"] = true, -- I'm scared of trying to make the drones mine fluids
-    ["mining-depot"] = true,
     ["stone-furnace"] = true,
 }
 -- We collect the entities in "removed_entities" so we know what technologies to remove afterwards
 local removed_entities = {}
 
 -- Remove all advanced assemblers, miners and smelters
-for _,type in ipairs({"assembling-machine", "mining-drill", "furnace"}) do
+for _, type in ipairs({"mining-drill", "furnace"}) do
     for entity in pairs(data.raw[type]) do
         if entities_to_keep[entity] then
             data.raw[type][entity].next_upgrade = nil

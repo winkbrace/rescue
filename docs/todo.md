@@ -11,6 +11,8 @@
 * [x] Make the depots unminable
 * [x] Disable recipes for mining drones and depots
 * [x] When a new patch is generated, that resource should be removed from the current tier list
+* [ ] Set the depot mining resource to the patch resource. And make it fixed. 
+* [ ] When a depot is liberated, it should receive 20 drones (neutral force?)
 * [ ] When a depot is destroyed a next one should spawn at the next distance
 * [ ] When a depot is liberated a next one should spawn at the next distance
 * [x] Create tiers of resources. (tier1: 2x iron, 1x copper, 1x coal, 1x stone) When all resources of a tier

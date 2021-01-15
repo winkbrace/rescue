@@ -9,7 +9,7 @@ Luckily you survived the crash and now it's up to you to save those poor souls t
 
 ## Gameplay
 
-In this mod you don't have access to anything more advanced than burner mining drills and basic assemblers. 
+In this mod you don't have access to anything more advanced than burner mining drills and stone furnaces. 
 There are no ore patches outside your starting area. You have to venture out to rescue colonist outposts. 
 Once rescued these colonists will supply you with a steady stream of resources.
 As you rescue an outpost, another one will be randomly generated a little further away than the previous one. 
@@ -26,6 +26,5 @@ changed is purple science. It now requires a substation instead of electric furn
 
 ## Wishes
 
-- The colonists are mining drones and they spawn next to a small ore patch of advanced materials.
 - Balance the game so that players still need to build starter base small quantities of everything,
   but they don't have to upscale after that.
