@@ -5,9 +5,9 @@ function table_count(table)
     return count
 end
 
-function table_random_key(table)
+function table_random_key(t)
     local keys = {}
-    for k in pairs(table) do
+    for k in pairs(t) do
         table.insert(keys, k)
     end
 

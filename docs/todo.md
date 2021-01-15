@@ -7,7 +7,7 @@
 * [x] Make mining depots appear at random location of increasing distance (a chunk each time)
 * [x] Give the depots a LOT of life so that the player has a limited time to rescue them.
 * [x] Spawn enemy bases around depots
-* [ ] Create ore fields of advanced materials
+* [x] Create ore fields of advanced materials
 * [x] Make the depots unminable
 * [x] Disable recipes for mining drones and depots
 * [x] When a new patch is generated, that resource should be removed from the current tier list
@@ -24,6 +24,7 @@
 * [ ] Compatibility with Krastorio 2
 * [ ] Compatibility with Bob's
 * [ ] i18n: https://wiki.factorio.com/Tutorial:Localisation
+* [ ] Add at least 3 variations of each resource icon for a prettier ore field. See resource "stage_counts" in data.raw
 * [ ] 
 
 ## Settings

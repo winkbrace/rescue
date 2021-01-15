@@ -3,9 +3,9 @@ require("util")
 local Event = require('__stdlib__/stdlib/event/event').set_protected_mode(true)
 local Log = require("__stdlib__/stdlib/misc/logger").new("rescue", DEBUG)
 
-local patcher = require 'prototypes/patcher'
-local builder = require 'prototypes/entity_builder'
-local tiers = require 'prototypes/tiers'
+local patcher = require 'src/patcher'
+local builder = require 'src/entity_builder'
+local tiers = require 'src/tiers'
 local player
 
 Event.register(Event.core_events.init, function()
@@ -14,6 +14,7 @@ Event.register(Event.core_events.init, function()
     global.outpost_distance = 6 -- in chunks
     global.enemy_base_size = 4
     global.depots = {}
+    global.besieged = {}
 end)
 
 Event.register(defines.events.on_player_created, function(e)
@@ -25,6 +26,7 @@ Event.register(defines.events.on_player_created, function(e)
         patcher.regenerate_with_default_settings()
         patcher.disable_spawning_new_resources()
 
+        -- TODO figure out text colors / format
         game.print("Starting resources have been regenerated with default settings. This is all you can mine.")
         game.print("Rescue colonist outposts to gain more resources. Oh, and rescue their butts of course!")
 
@@ -46,6 +48,7 @@ Event.register(defines.events.script_raised_built, function(e)
 
     local depot = e.entity
     table.insert(global.depots, depot)
+    table.insert(global.besieged, depot)
 
     -- message player
     game.print("New outpost discovered! Check the alert message.")
@@ -53,7 +56,7 @@ Event.register(defines.events.script_raised_built, function(e)
     Log.log("New outpost spawned at " .. serpent.line(depot.position))
 
     -- spawn patch
-    patcher.spawn_near_depot(depot.position, "iron-ore")  -- TODO tiers.next_item()
+    patcher.spawn_near_depot(depot.position, tiers.next_item())
     Log.log("New patch spawned at " .. serpent.line(depot.position))
 
     -- spawn enemy base

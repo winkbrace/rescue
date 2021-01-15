@@ -1,3 +1,6 @@
+-- resourcer.lua
+-- This prototype is responsible for spawning resource patches on the map
+--
 local Log = require("__stdlib__/stdlib/misc/logger").new("rescue", DEBUG)
 
 local patcher = {

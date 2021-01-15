@@ -1,12 +1,15 @@
+-- tiers.lua
+-- This prototype keeps track of what item type the next outpost patch should be
+--
 local Log = require("__stdlib__/stdlib/misc/logger").new("rescue", DEBUG)
 
 local tiers = {
     current = 1,
     all = {
-        [1] = { ["iron-plate"] = 1, ["copper-plate"] = 1, ["stone"] = 1, ["coal"] = 1, ["bullet"] = 1, },
-        [2] = { ["iron-gear-wheel"] = 1, ["steel-plate"] = 1, ["stone-brick"] = 1, ["copper-wire"] = 1, },
-        [3] = { ["transport-belt"] = 1, ["inserter"] = 1, ["iron-stick"] = 1, },
-        [4] = { ["engines"] = 1, ["sulfur"] = 1, ["electronic-circuit"] = 1, },
+        [1] = { ["iron-plate"] = 1, ["copper-plate"] = 1, ["firearm-magazine"] = 1, ["coal"] = 1, ["stone"] = 1, },
+        [2] = { ["iron-gear-wheel"] = 1, ["steel-plate"] = 1, ["stone-brick"] = 1, ["copper-cable"] = 1, },
+        [3] = { ["iron-stick"] = 1, },
+        [4] = { ["engine-unit"] = 1, ["sulfur"] = 1, ["electronic-circuit"] = 1, },
     },
 }
 

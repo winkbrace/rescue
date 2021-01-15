@@ -1,4 +1,5 @@
-local Log = require("__stdlib__/stdlib/misc/logger").new("rescue", true)
+DEBUG = true
+local Log = require("__stdlib__/stdlib/misc/logger").new("rescue", DEBUG)
 local Recipe = require("__stdlib__/stdlib/data/recipe")
 
 -- These are the basic assembling entities that are allowed. Any more advanced will be removed
@@ -58,3 +59,5 @@ data.raw["tips-and-tricks-item"]["fast-replace-belt-splitter"] = nil
 data.raw["tips-and-tricks-item"]["fast-replace-belt-underground"] = nil
 data.raw["tips-and-tricks-item"]["rotating-assemblers"] = nil
 
+-- add our custom mining resources
+(require 'src/resourcer').add_all()
