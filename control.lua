@@ -1,14 +1,13 @@
 DEBUG = true
-require("util")
-local Event = require('__stdlib__/stdlib/event/event').set_protected_mode(true)
-local Log = require("__stdlib__/stdlib/misc/logger").new("rescue", DEBUG)
+require "src/util"
+local Log = require("src/logger").new("Rescue/rescue.log", DEBUG)
 
 local patcher = require 'src/patcher'
 local builder = require 'src/entity_builder'
 local tiers = require 'src/tiers'
 local player
 
-Event.register(Event.core_events.init, function()
+script.on_init(function()
     global.resources_initialized = false
     global.outpost_initialized = false
     global.outpost_distance = 6 -- in chunks
@@ -17,7 +16,7 @@ Event.register(Event.core_events.init, function()
     global.besieged = {}
 end)
 
-Event.register(defines.events.on_player_created, function(e)
+script.on_event(defines.events.on_player_created, function(e)
     player = game.players[e.player_index]
     patcher.surface = game.surfaces.nauvis
 
@@ -34,14 +33,13 @@ Event.register(defines.events.on_player_created, function(e)
     end
 
     if not global.outpost_initialized then
-        local radius = global.outpost_distance * 32
-        builder.spawn_depot_on_radius(radius)
+        builder.spawn_depot_on_radius(global.outpost_distance * 32)
 
         global.outpost_initialized = true
     end
 end)
 
-Event.register(defines.events.script_raised_built, function(e)
+script.on_event(defines.events.script_raised_built, function(e)
     if e.entity.name ~= "mining-depot" then
         return
     end
@@ -68,8 +66,8 @@ Event.register(defines.events.script_raised_built, function(e)
 end)
 
 -- keep depots revealed on map
-Event.register(defines.events.on_tick, function(event)
-    if event.tick % 60*5 == 0 then --every 5 seconds
+script.on_event(defines.events.on_tick, function(event)
+    if event.tick % (60 * 5) == 0 then --every 5 seconds
         for _, depot in ipairs(global.depots) do
             local pos = depot.position
             game.forces.player.chart(game.surfaces[1], {{pos.x - 16, pos.y - 16}, {pos.x + 16, pos.y + 16}})

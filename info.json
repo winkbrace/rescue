@@ -9,7 +9,6 @@
   "description": "Rescue colonist outposts in order to obtain their resources.",
   "dependencies": [
     "base >= 1.1",
-    "Mining_Drones >= 1.0",
-    "stdlib >= 1.4"
+    "Mining_Drones >= 1.0"
   ]
 }

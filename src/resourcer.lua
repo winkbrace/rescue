@@ -1,7 +1,6 @@
 -- resourcer.lua
 -- This prototype is responsible for adding additional mining resources to the game.
 --
-local Log = require("__stdlib__/stdlib/misc/logger").new("rescue", DEBUG)
 local tiers = require 'src/tiers'
 
 local resourcer = {}
@@ -54,7 +53,7 @@ function resourcer.add_item_resource(item_name)
         },
     } }
 
-    Log.log("Resource " .. item_name .. " has been added")
+    log("Resource " .. item_name .. " has been added")
 end
 
 function resourcer.get_item_color_on_map(item)

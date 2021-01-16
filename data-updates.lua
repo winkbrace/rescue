@@ -1,5 +1,4 @@
 DEBUG = true
-local Log = require("__stdlib__/stdlib/misc/logger").new("rescue", DEBUG)
 local Recipe = require("__stdlib__/stdlib/data/recipe")
 
 -- These are the basic assembling entities that are allowed. Any more advanced will be removed
@@ -18,7 +17,7 @@ for _, type in ipairs({"mining-drill", "furnace"}) do
         if entities_to_keep[entity] then
             data.raw[type][entity].next_upgrade = nil
         else
-            Log.log("Entity removed by Rescue: " .. entity)
+            log("Entity removed by Rescue: " .. entity)
             data.raw[type][entity] = nil
             data.raw.item[entity] = nil
             data.raw.recipe[entity] = nil
@@ -45,14 +44,13 @@ data.raw.recipe["mining-drone"] = nil
 
 -- Depots should not be minable by the player. Also give them lots of life.
 data.raw["assembling-machine"]["mining-depot"].minable = nil
-data.raw["assembling-machine"]["mining-depot"].max_health = 1e5 -- originally was 400
+data.raw["assembling-machine"]["mining-depot"].max_health = 1e6 -- originally was 400
 data.raw["assembling-machine"]["mining-depot"].alert_when_damaged = false
 
 -- Remove tips & tricks that trigger when something related to our removed buildings happens
 data.raw["tips-and-tricks-item"]["fast-replace"] = nil
 data.raw["tips-and-tricks-item"]["fast-replace-belt-splitter"] = nil
 data.raw["tips-and-tricks-item"]["fast-replace-belt-underground"] = nil
-data.raw["tips-and-tricks-item"]["rotating-assemblers"] = nil
 
 -- add our custom mining resources
 (require 'src/resourcer').add_all()

@@ -1,8 +1,6 @@
 -- entity_builder.lua
 -- This prototype is responsible for spawning the mining depots and enemy bases
 --
-local Log = require("__stdlib__/stdlib/misc/logger").new("rescue", DEBUG)
-
 local builder = {}
 
 function builder.get_random_position(center, radius, entity)
@@ -36,10 +34,11 @@ function builder.spawn_enemy_base_at_depot(depot, size)
     local worms = {[0] = "small-worm-turret", "medium-worm-turret", "big-worm-turret", "behemoth-worm-turret"}
     for i = 1, size do
         local base_type = i < 3 and "biter-spawner" or types[i % 2]
-        game.surfaces[1].create_entity{
+        local spawner = game.surfaces[1].create_entity{
             name     = base_type,
             position = builder.get_random_position(depot.position, 12, base_type),
         }
+        script.register_on_entity_destroyed(spawner)
     end
     for i = 3, size do
         local worm = i < 8 and worms[i % 2] or worms[(i % 2) + 2]

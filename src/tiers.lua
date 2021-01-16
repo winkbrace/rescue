@@ -1,8 +1,6 @@
 -- tiers.lua
 -- This prototype keeps track of what item type the next outpost patch should be
 --
-local Log = require("__stdlib__/stdlib/misc/logger").new("rescue", DEBUG)
-
 local tiers = {
     current = 1,
     all = {
