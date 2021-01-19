@@ -1,6 +1,8 @@
 -- entity_builder.lua
 -- This prototype is responsible for spawning the mining depots and enemy bases
 --
+local tracker = require "tracker"
+
 local builder = {}
 
 function builder.get_random_position(center, radius, entity)
@@ -14,7 +16,7 @@ function builder.get_random_position(center, radius, entity)
 end
 
 function builder.spawn_depot_on_radius(radius)
-    local pos = builder.get_random_position({x=0, y=0}, radius, "mining-depot")
+    local pos = builder.get_random_position({x=0, y=0}, radius * 32, "mining-depot")
 
     local direction
     if math.abs(pos.x) > math.abs(pos.y) then
@@ -24,12 +26,15 @@ function builder.spawn_depot_on_radius(radius)
     end
 
     game.surfaces[1].create_entity{
-        name = "mining-depot", position = pos, direction = direction,
-        force = game.forces.player, raise_built = true
+        name = "mining-depot",
+        position = pos,
+        direction = direction,
+        force = game.forces.player,
+        raise_built = true,
     }
 end
 
-function builder.spawn_enemy_base_at_depot(depot, size)
+function builder.spawn_enemy_bases_at_depot(depot, size)
     local types = {[0] = "biter-spawner", "spitter-spawner"}
     local worms = {[0] = "small-worm-turret", "medium-worm-turret", "big-worm-turret", "behemoth-worm-turret"}
     for i = 1, size do
@@ -38,7 +43,8 @@ function builder.spawn_enemy_base_at_depot(depot, size)
             name     = base_type,
             position = builder.get_random_position(depot.position, 12, base_type),
         }
-        script.register_on_entity_destroyed(spawner)
+        local reg_id = script.register_on_entity_destroyed(spawner)
+        tracker.register_spawner_at_depot(depot, reg_id)
     end
     for i = 3, size do
         local worm = i < 8 and worms[i % 2] or worms[(i % 2) + 2]
@@ -48,6 +54,11 @@ function builder.spawn_enemy_base_at_depot(depot, size)
             target   = depot,
         }
     end
+end
+
+function builder.add_drones(depot)
+    local inventory = depot.get_inventory(defines.inventory.assembling_machine_input)
+    inventory.insert{name="mining-drone", count=20}
 end
 
 return builder

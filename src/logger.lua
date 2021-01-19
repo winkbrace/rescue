@@ -3,6 +3,7 @@ local Log = {
     buffer = {},
     debug = false,
     last_written = 0,
+    append = false,
 }
 
 function Log.new(filename, debug)
@@ -36,11 +37,11 @@ function Log.log(msg)
 end
 
 function Log.write()
-    if table_count(Log.buffer) > 0 then
-        local append = Log.last_written ~= 0
-        game.write_file(Log.filename, table.concat(Log.buffer), append)
+    if table_size(Log.buffer) > 0 then
+        game.write_file(Log.filename, table.concat(Log.buffer), Log.append)
         Log.buffer = {}
         Log.last_written = game.tick
+        Log.append = true
     end
 end
 

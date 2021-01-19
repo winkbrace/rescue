@@ -15,14 +15,19 @@ Once rescued these colonists will supply you with a steady stream of resources.
 As you rescue an outpost, another one will be randomly generated a little further away than the previous one. 
 The more outposts you rescue, the more advanced materials they will provide. But beware, they will also be more heavily besieged!
 
-> Note: Maybe we require the user to take a minimum amount (1000?) of the resource before we generate the next outpost.
-
 The idea is that you are encouraged to focus on building a good military and train network early on. 
 During the midgame you will mostly be busy connecting the remote outposts.
+
+#### Changes
 
 Rescue is designed to be playable as a vanilla experience with a big twist. The only recipe that had to be 
 changed is purple science. It now requires a substation instead of electric furnace to build.
 
+
+## Credits
+
+Huge credits go to Klonan, the developer of the [Mining Drones](https://mods.factorio.com/mod/Mining_Drones) mod, which
+lies at the foundation for the Rescue idea.
 
 ## Wishes
 

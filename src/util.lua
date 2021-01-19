@@ -1,9 +1,5 @@
-function table_count(table)
-    local count = 0
-    for _ in pairs(table) do count = count + 1 end
-
-    return count
-end
+-- this c++ function has been provided by factorio
+-- table_size(table)
 
 function table_random_key(t)
     local keys = {}

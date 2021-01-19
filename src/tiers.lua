@@ -21,7 +21,7 @@ function tiers.remove_item(item)
     end
     tiers.all[tiers.current] = tier
 
-    if table_count(tier) == 0 then
+    if table_size(tier) == 0 then
         tiers.current = tiers.current + 1
     end
 end

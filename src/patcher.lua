@@ -1,12 +1,14 @@
 -- resourcer.lua
 -- This prototype is responsible for spawning resource patches on the map
 --
+local tracker = require "tracker"
+
 local patcher = {
     surface = {},
     resources_to_disable = {},
 }
 
-function patcher.spawn(position, item)
+function patcher.spawn(position, resource)
     local tiles = 512
     local w_max = 16
     local h_max = 16
@@ -50,7 +52,7 @@ function patcher.spawn(position, item)
     for x, _ in pairs(biases) do for y, bias in pairs(_) do
         if patcher.surface.get_tile(position.x + x, position.y + y).collides_with("ground-tile") then
             patcher.surface.create_entity {
-                name = item,
+                name = resource,
                 amount = amount * (bias / total_bias),
                 force = 'neutral',
                 position = { position.x + x, position.y + y },
@@ -59,15 +61,17 @@ function patcher.spawn(position, item)
     end end
 end
 
-function patcher.spawn_near_depot(pos, item)
-    local pos = pos
+function patcher.spawn_near_depot(depot, resource)
+    local pos = depot.position
     if math.abs(pos.x) > math.abs(pos.y) then
         pos.x = pos.x > 0 and pos.x + 24 or pos.x - 24
     else
         pos.y = pos.y > 0 and pos.y + 24 or pos.y - 24
     end
 
-    patcher.spawn(pos, item)
+    patcher.spawn(pos, resource)
+    depot.set_recipe(resource)
+    tracker.register_resource_at_depot(depot, resource)
 end
 
 function patcher.find_resources_to_disable()
@@ -104,7 +108,7 @@ function patcher.regenerate_with_default_settings()
     patcher.set_map_gen_settings(resources, 1)
 
     local chunks = {}
-    for x = -3, 3 do for y = -3, 3 do
+    for x = -4, 4 do for y = -4, 4 do -- It really can't be smaller than this.
         table.insert(chunks, {x, y})
     end end
     patcher.surface.regenerate_entity(resources, chunks)
@@ -117,8 +121,8 @@ function patcher.disable_spawning_new_resources()
     patcher.set_map_gen_settings(patcher.resources_to_disable, 0)
     patcher.set_map_gen_settings({"crude-oil"}, 1)
 
-    Log.log("resource generation (autoplace) has been disabled for these resources:")
-    Log.log(serpent.line(patcher.resources_to_disable))
+    global.log("resource generation (autoplace) has been disabled for these resources:")
+    global.log(serpent.line(patcher.resources_to_disable))
 end
 
 return patcher
